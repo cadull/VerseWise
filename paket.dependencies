@@ -1,0 +1,17 @@
+source https://api.nuget.org/v3/index.json
+storage: none
+framework: auto-detect
+
+nuget FSharp.Core
+
+group tests
+source https://api.nuget.org/v3/index.json
+storage: none
+framework: auto-detect
+
+nuget coverlet.collector 1.0.1
+nuget FSharp.Core
+nuget Microsoft.NET.Test.Sdk 16.2.0
+nuget unquote
+nuget xunit 2.4.0
+nuget xunit.runner.visualstudio 2.4.0

@@ -1,0 +1,7 @@
+group tests
+coverlet.collector
+FSharp.Core
+Microsoft.NET.Test.Sdk
+unquote
+xunit
+xunit.runner.visualstudio
