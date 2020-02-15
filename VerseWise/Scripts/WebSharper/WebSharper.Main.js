@@ -1,7 +1,7 @@
 (function()
 {
  "use strict";
- var Global,WebSharper,JavaScript,JS,Error,NonStandardPromiseRejectionException,Promise,Pervasives,Json,Obj,Remoting,XhrProvider,AjaxRemotingProvider,SC$1,HtmlContentExtensions,SingleNode,IControlBody,Activator,SC$2,Collections,EqualityComparer,Comparers,EquatableEqualityComparer,BaseEqualityComparer,Comparer,ComparableComparer,BaseComparer,Operators,Nullable,Utils,Concurrency,CT,AsyncBody,Scheduler,SC$3,Enumerator,T,Optional,Arrays,Seq,List,Arrays2D,CancellationTokenSource,Char,Util,DateUtil,DateTimeOffset,Delegate,DictionaryUtil,KeyCollection,ValueCollection,Dictionary,Exception,MatchFailureException,IndexOutOfRangeException,OperationCanceledException,ArgumentException,ArgumentOutOfRangeException,ArgumentNullException,InvalidOperationException,AggregateException,TimeoutException,FormatException,OverflowException,TaskCanceledException,System,Guid,HashSetUtil,HashSet,LazyExtensionsProxy,LazyRecord,Lazy,T$1,Slice,Option,Queue,Random,Ref,Result,Control,Stack,Strings,Task,Task1,TaskCompletionSource,Unchecked,Microsoft,FSharp,Core,FSharpValueOption,ValueOption,Numeric,IntelliFactory,Runtime,Promise$1,JSON,String,Date,console,Math;
+ var Global,WebSharper,JavaScript,JS,Error,NonStandardPromiseRejectionException,Promise,Pervasives,Json,Obj,Remoting,XhrProvider,AjaxRemotingProvider,SC$1,HtmlContentExtensions,SingleNode,IControlBody,Activator,SC$2,Collections,EqualityComparer,Comparers,EquatableEqualityComparer,BaseEqualityComparer,Comparer,ComparableComparer,BaseComparer,Operators,Nullable,Utils,Concurrency,CT,AsyncBody,Scheduler,SC$3,Enumerator,T,Optional,Arrays,Seq,List,Arrays2D,CancellationTokenSource,Char,Util,DateUtil,DateTimeOffset,Delegate,DictionaryUtil,KeyCollection,ValueCollection,Dictionary,Exception,MatchFailureException,IndexOutOfRangeException,OperationCanceledException,ArgumentException,ArgumentOutOfRangeException,ArgumentNullException,InvalidOperationException,AggregateException,TimeoutException,FormatException,OverflowException,TaskCanceledException,KeyNotFoundException,System,Guid,HashSetUtil,HashSet,Collections$1,DictionaryEntry,LazyExtensionsProxy,LazyRecord,Lazy,T$1,Slice,Option,Queue,Random,Ref,Result,Control,Stack,Strings,Task,Task1,TaskCompletionSource,Unchecked,Microsoft,FSharp,Core,FSharpValueOption,ValueOption,Numeric,IntelliFactory,Runtime,Promise$1,JSON,String,Date,console,Math;
  Global=self;
  WebSharper=Global.WebSharper=Global.WebSharper||{};
  JavaScript=WebSharper.JavaScript=WebSharper.JavaScript||{};
@@ -67,10 +67,13 @@
  FormatException=WebSharper.FormatException=WebSharper.FormatException||{};
  OverflowException=WebSharper.OverflowException=WebSharper.OverflowException||{};
  TaskCanceledException=WebSharper.TaskCanceledException=WebSharper.TaskCanceledException||{};
+ KeyNotFoundException=WebSharper.KeyNotFoundException=WebSharper.KeyNotFoundException||{};
  System=Global.System=Global.System||{};
  Guid=System.Guid=System.Guid||{};
  HashSetUtil=Collections.HashSetUtil=Collections.HashSetUtil||{};
  HashSet=Collections.HashSet=Collections.HashSet||{};
+ Collections$1=System.Collections=System.Collections||{};
+ DictionaryEntry=Collections$1.DictionaryEntry=Collections$1.DictionaryEntry||{};
  LazyExtensionsProxy=WebSharper.LazyExtensionsProxy=WebSharper.LazyExtensionsProxy||{};
  LazyRecord=LazyExtensionsProxy.LazyRecord=LazyExtensionsProxy.LazyRecord||{};
  Lazy=WebSharper.Lazy=WebSharper.Lazy||{};
@@ -3668,6 +3671,16 @@
   this.message=message;
   Global.Object.setPrototypeOf(this,TaskCanceledException.prototype);
  },TaskCanceledException);
+ KeyNotFoundException=WebSharper.KeyNotFoundException=Runtime.Class({},Error,KeyNotFoundException);
+ KeyNotFoundException.New=Runtime.Ctor(function()
+ {
+  KeyNotFoundException.New$1.call(this,"The given key was not present in the dictionary.");
+ },KeyNotFoundException);
+ KeyNotFoundException.New$1=Runtime.Ctor(function(message)
+ {
+  this.message=message;
+  Global.Object.setPrototypeOf(this,KeyNotFoundException.prototype);
+ },KeyNotFoundException);
  Arrays.create2D=function(rows)
  {
   var arr;
@@ -4123,6 +4136,30 @@
     e.Dispose();
   }
  },HashSet);
+ DictionaryEntry=Collections$1.DictionaryEntry=Runtime.Class({
+  set_Value:function(value)
+  {
+   this.innerValue=value;
+  },
+  Value:function()
+  {
+   return this.innerValue;
+  },
+  set_Key:function(key)
+  {
+   this.innerKey=key;
+  },
+  Key:function()
+  {
+   return this.innerKey;
+  }
+ },Obj,DictionaryEntry);
+ DictionaryEntry.New=Runtime.Ctor(function(key,value)
+ {
+  Obj.New.call(this);
+  this.innerKey=key;
+  this.innerValue=value;
+ },DictionaryEntry);
  LazyRecord.New=function(created,evalOrVal,force)
  {
   return{

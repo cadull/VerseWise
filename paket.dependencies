@@ -3,15 +3,19 @@ storage: none
 framework: auto-detect
 
 nuget FSharp.Core
+nuget System.ValueTuple
+nuget WebSharper
+nuget WebSharper.FSharp
+nuget WebSharper.UI
 
 group tests
 source https://api.nuget.org/v3/index.json
 storage: none
 framework: auto-detect
 
-nuget coverlet.collector 1.0.1
+nuget coverlet.collector
 nuget FSharp.Core
-nuget Microsoft.NET.Test.Sdk 16.2.0
+nuget Microsoft.NET.Test.Sdk
 nuget unquote
-nuget xunit 2.4.0
-nuget xunit.runner.visualstudio 2.4.0
+nuget xunit
+nuget xunit.runner.visualstudio
