@@ -22,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EF7ABFF3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F891F6CF-32D5-4B85-B8E3-D768D1CD90C5}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VerseWise", "VerseWise\VerseWise.fsproj", "{94062A30-68DA-4AEF-960F-A49E3A299140}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VerseWise", "src\VerseWise\VerseWise.fsproj", "{94062A30-68DA-4AEF-960F-A49E3A299140}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
