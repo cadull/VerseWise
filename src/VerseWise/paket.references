@@ -1,5 +1,5 @@
-FSharp.Core
-System.ValueTuple
 WebSharper
 WebSharper.FSharp
 WebSharper.UI
+WebSharper.AspNetCore
+FSharp.Core
