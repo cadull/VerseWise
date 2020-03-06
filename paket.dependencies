@@ -1,0 +1,30 @@
+source https://api.nuget.org/v3/index.json
+storage: none
+framework: netcoreapp3.0
+
+nuget FSharp.Core
+nuget WebSharper
+nuget WebSharper.AspNetCore
+nuget WebSharper.FSharp
+nuget WebSharper.UI
+
+group library
+source https://api.nuget.org/v3/index.json
+storage: none
+framework: netstandard2.1
+
+nuget FSharp.Core
+nuget WebSharper
+nuget WebSharper.FSharp
+
+group tests
+source https://api.nuget.org/v3/index.json
+storage: none
+framework: netcoreapp3.0
+
+nuget coverlet.collector
+nuget FSharp.Core
+nuget Microsoft.NET.Test.Sdk
+nuget unquote
+nuget xunit
+nuget xunit.runner.visualstudio
