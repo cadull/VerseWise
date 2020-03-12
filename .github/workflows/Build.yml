@@ -9,5 +9,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: DefaultPath
+      run: dir
     - name: Build
       run: build.cmd
