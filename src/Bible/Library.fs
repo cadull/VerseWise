@@ -1,4 +1,4 @@
-namespace Bible
+namespace VerseWise.Bible
 
 module Say =
     let hello name =

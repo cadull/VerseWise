@@ -2,6 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>VerseWise.Dictionary</AssemblyName>
+    <Copyright>https://github.com/cadull/VerseWise</Copyright>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Library.fs" />

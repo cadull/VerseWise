@@ -1,4 +1,4 @@
-﻿namespace Database
+﻿namespace VerseWise.Database
 
 module Say =
     let hello name =
