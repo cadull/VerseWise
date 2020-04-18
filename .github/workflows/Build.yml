@@ -8,6 +8,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
+    
     - uses: actions/checkout@v2
+
+    - name: Fetch history for GitVersion
+      run: git fetch --prune --unshallow
+
     - name: Build
       run: .\build.cmd
