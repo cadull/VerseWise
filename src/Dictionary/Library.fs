@@ -1,4 +1,4 @@
-﻿namespace Dictionary
+﻿namespace VerseWise.Dictionary
 
 module Say =
     let hello name =

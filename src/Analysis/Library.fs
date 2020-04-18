@@ -1,4 +1,4 @@
-﻿namespace Analysis
+﻿namespace VerseWise.Analysis
 
 module Say =
     let hello name =

@@ -2,6 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Copyright>https://github.com/cadull/VerseWise</Copyright>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Remoting.fs" />

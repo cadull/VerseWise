@@ -1,4 +1,4 @@
-module Dictionary.Tests
+module VerseWise.Dictionary.Tests
 
 open Swensen.Unquote
 open Xunit
