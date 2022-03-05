@@ -1,8 +1,7 @@
-(function()
+(function(Global)
 {
  "use strict";
- var Global,VerseWise,Client,WebSharper,UI,Var$1,Submitter,View,Remoting,AjaxRemotingProvider,Concurrency,Doc,AttrProxy;
- Global=self;
+ var VerseWise,Client,WebSharper,UI,Var$1,Submitter,View,Remoting,AjaxRemotingProvider,Concurrency,Doc,AttrProxy;
  VerseWise=Global.VerseWise=Global.VerseWise||{};
  Client=VerseWise.Client=VerseWise.Client||{};
  WebSharper=Global.WebSharper;
@@ -23,7 +22,7 @@
   vReversed=View.MapAsync(function(a)
   {
    var b;
-   return a!=null&&a.$==1?(new AjaxRemotingProvider.New()).Async("VerseWise:VerseWise.Server.DoSomething:1908234596",[a.$0]):(b=null,Concurrency.Delay(function()
+   return a!=null&&a.$==1?(new AjaxRemotingProvider.New()).Async("VerseWise:VerseWise.Server.DoSomething:1166187397",[a.$0]):(b=null,Concurrency.Delay(function()
    {
     return Concurrency.Return("");
    }));
@@ -33,4 +32,4 @@
    submit.Trigger();
   }),Doc.Element("hr",[],[]),Doc.Element("h4",[AttrProxy.Create("class","text-muted")],[Doc.TextNode("The server responded:")]),Doc.Element("div",[AttrProxy.Create("class","jumbotron")],[Doc.Element("h1",[],[Doc.TextView(vReversed)])])]);
  };
-}());
+}(self));
