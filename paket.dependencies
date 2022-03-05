@@ -1,6 +1,6 @@
 source https://api.nuget.org/v3/index.json
 storage: none
-framework: netcoreapp3.0
+framework: net5
 
 nuget FSharp.Core
 nuget WebSharper
@@ -11,7 +11,7 @@ nuget WebSharper.UI
 group library
 source https://api.nuget.org/v3/index.json
 storage: none
-framework: netstandard2.1
+framework: net5
 
 nuget FSharp.Core
 nuget WebSharper
@@ -20,7 +20,7 @@ nuget WebSharper.FSharp
 group tests
 source https://api.nuget.org/v3/index.json
 storage: none
-framework: netcoreapp3.0
+framework: net5
 
 nuget coverlet.collector
 nuget FSharp.Core

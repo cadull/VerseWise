@@ -1,8 +1,7 @@
-(function()
+(function(Global)
 {
  "use strict";
- var Global,WebSharper,Sitelets,CorsAllows,StringEncoding,PathUtil,Route,List,Router,Obj,RouterModule,ListArrayConverter,RouterOperators,SC$1,Strings,String,List$1,Seq,Collections,Map,Arrays,IntelliFactory,Runtime,FSharpMap,Unchecked,Utils,console,Lazy,Nullable,Numeric,Operators,Concurrency,$,Char,System,Guid,Slice;
- Global=self;
+ var WebSharper,Sitelets,CorsAllows,StringEncoding,PathUtil,Route,List,Router,Obj,RouterModule,ListArrayConverter,RouterOperators,SC$1,Strings,String,List$1,Seq,Collections,Map,Arrays,IntelliFactory,Runtime,FSharpMap,Unchecked,Utils,console,Lazy,Nullable,Numeric,Operators,Concurrency,Char,System,Guid,Slice;
  WebSharper=Global.WebSharper=Global.WebSharper||{};
  Sitelets=WebSharper.Sitelets=WebSharper.Sitelets||{};
  CorsAllows=Sitelets.CorsAllows=Sitelets.CorsAllows||{};
@@ -34,7 +33,6 @@
  Numeric=WebSharper&&WebSharper.Numeric;
  Operators=WebSharper&&WebSharper.Operators;
  Concurrency=WebSharper&&WebSharper.Concurrency;
- $=Global.jQuery;
  Char=WebSharper&&WebSharper.Char;
  System=Global.System;
  Guid=System&&System.Guid;
@@ -53,8 +51,7 @@
  StringEncoding.read=function(s)
  {
   var buf;
-  buf=[];
-  return function(chars)
+  function loop(chars)
   {
    var m;
    while(true)
@@ -80,7 +77,9 @@
         chars=m[1];
        }
     }
-  }(List$1.ofSeq(Seq.map(function(v)
+  }
+  buf=[];
+  return loop(List$1.ofSeq(Seq.map(function(v)
   {
    return v.charCodeAt();
   },s)));
@@ -212,9 +211,13 @@
   {
    var m$1,m$2;
    m$1=p.Method;
-   m$1!=null&&m$1.$==1?method=m$1:void 0;
+   if(m$1!=null&&m$1.$==1)
+    method=m$1;
    m$2=p.Body.f();
-   m$2===null?void 0:body=m$2;
+   if(m$2===null)
+    ;
+   else
+    body=m$2;
    queryArgs=Map.FoldBack(function(k,v,t)
    {
     return t.Add(k,v);
@@ -548,20 +551,26 @@
   return Router.New$1(function(path)
   {
    var m,m$1,o;
-   function collect(l,path$1,acc)
+   function collect(l)
    {
-    function m$2(p,a)
+    return function(path$1)
     {
-     return collect(l-1,p,new List$1.T({
-      $:1,
-      $0:a,
-      $1:acc
-     }));
-    }
-    return l===0?[[path$1,Arrays.ofList(List$1.rev(acc))]]:Seq.collect(function($1)
-    {
-     return m$2($1[0],$1[1]);
-    },item.Parse(path$1));
+     return function(acc)
+     {
+      function m$2(p,a)
+      {
+       return((collect(l-1))(p))(new List$1.T({
+        $:1,
+        $0:a,
+        $1:acc
+       }));
+      }
+      return l===0?[[path$1,Arrays.ofList(List$1.rev(acc))]]:Seq.collect(function($1)
+      {
+       return m$2($1[0],$1[1]);
+      },item.Parse(path$1));
+     };
+    };
    }
    m=path.Segments;
    return m.$==1?(m$1=(o=0,[Numeric.TryParseInt32(m.$0,{
@@ -573,7 +582,7 @@
     {
      o=v;
     }
-   }),o]),m$1[0]?collect(m$1[1],Route.New(m.$1,path.QueryArgs,path.FormData,path.Method,path.Body),List$1.T.Empty):[]):[];
+   }),o]),m$1[0]?((collect(m$1[1]))(Route.New(m.$1,path.QueryArgs,path.FormData,path.Method,path.Body)))(List$1.T.Empty):[]):[];
   },function(value)
   {
    var parts;
@@ -790,32 +799,49 @@
    return fd.append(k,v);
   },path.FormData),options$1.body=fd):void 0:options$1.body=m$1,url=path.ToLink(),self.fetch(baseUrl==null?url:Strings.TrimEnd(baseUrl.$0,["/"])+url,options$1))):Operators.FailWith("Failed to map endpoint to request");
  };
- RouterModule.Ajax=function(router,endpoint)
+ RouterModule.XHR=function(router,endpoint)
  {
-  return RouterModule.AjaxWith({},router,endpoint);
+  return RouterModule.XHRWith({
+   ResponseT:"text",
+   Url:"",
+   IsAsync:true,
+   Username:"",
+   Password:"",
+   Timeout:0,
+   WithCredentials:false
+  },router,endpoint);
  };
- RouterModule.AjaxWith=function(settings,router,endpoint)
+ RouterModule.XHRWith=function(conf,router,endpoint)
  {
-  var settings$1,m,path,m$1,m$2,fd;
-  settings$1=settings?settings:{};
+  var xhr,m,path,method,m$1;
+  xhr=new Global.XMLHttpRequest();
   m=RouterModule.Write(router,endpoint);
-  return m!=null&&m.$==1?(path=m.$0,(settings$1.dataType===void 0?settings$1.dataType="text":void 0,settings$1.type=(m$1=path.Method,m$1==null?"POST":m$1.$0),m$2=path.Body.f(),m$2===null?!path.FormData.get_IsEmpty()?(fd=new Global.FormData(),Map.Iterate(function(k,v)
+  return m!=null&&m.$==1?(path=m.$0,(conf.ResponseT===void 0?conf.ResponseT="text":void 0,method=(m$1=path.Method,m$1==null?"POST":m$1.$0),Concurrency.FromContinuations(function(ok,err)
   {
-   return fd.append(k,v);
-  },path.FormData),settings$1.contentType=false,settings$1.data=fd,settings$1.processData=false):void 0:(settings$1.contentType="application/json",settings$1.data=m$2,settings$1.processData=false),Concurrency.FromContinuations(function(ok,err)
-  {
-   var url;
-   settings$1.success=function(res)
+   var url,m$2,fd;
+   xhr.onload=function()
    {
-    return ok(res);
+    return ok(xhr.response);
    };
-   settings$1.error=function(a,a$1,msg)
+   xhr.onerror=function()
    {
-    return err(new Global.Error(msg));
+    return err(new Global.Error(xhr.statusText));
    };
    url=path.ToLink();
-   settings$1.url=settings$1.url?Strings.TrimEnd(settings$1.url,["/"])+url:url;
-   $.ajax(settings$1);
+   conf.Url=conf.Url?Strings.TrimEnd(conf.Url,["/"])+url:url;
+   if(conf.Username!==""&&conf.Password!=="")
+    xhr.open(method,conf.Url,conf.IsAsync,conf.Username,conf.Password);
+   else
+    xhr.open(method,conf.Url,conf.IsAsync);
+   if(conf.Timeout!==0)
+    xhr.timeout=conf.Timeout;
+   if(conf.WithCredentials)
+    xhr.withCredentials=conf.WithCredentials;
+   m$2=path.Body.f();
+   return m$2===null?!path.FormData.get_IsEmpty()?(fd=new Global.FormData(),(Map.Iterate(function(k,v)
+   {
+    return fd.append(k,v);
+   },path.FormData),xhr.send(fd))):xhr.send():xhr.send(m$2);
   }))):Operators.FailWith("Failed to map endpoint to request");
  };
  RouterModule.Link=function(router,endpoint)
@@ -1101,18 +1127,51 @@
   {
    function collect(fields$1,path$1,arr)
    {
-    var i,t,m$2,$1;
-    function m$3(p,a)
-    {
-     var narr;
-     narr=arr.slice();
-     Arrays.set(narr,i,a);
-     return collect(t,p,narr);
-    }
-    return fields$1.$==1?fields$1.$0.$==1?(i=fields$1.$0.$0[0],(t=fields$1.$1,Seq.collect(function($2)
-    {
-     return m$3($2[0],$2[1]);
-    },fields$1.$0.$0[1].Parse(path$1)))):(m$2=path$1.Segments,m$2.$==1&&(m$2.$0===fields$1.$0.$0&&($1=[m$2.$0,m$2.$1],true))?collect(fields$1.$1,Route.New($1[1],path$1.QueryArgs,path$1.FormData,path$1.Method,path$1.Body),arr):[]):[[path$1,createObject(arr)]];
+    var h,i,t,x,$1,p,t$1,m$2;
+    while(true)
+     {
+      if(fields$1.$==1)
+      {
+       if(fields$1.$0.$==1)
+        {
+         h=fields$1.$0.$0[1];
+         i=fields$1.$0.$0[0];
+         t=fields$1.$1;
+         x=h.Parse(path$1);
+         return(function(m$3)
+         {
+          return function(s)
+          {
+           return Seq.collect(m$3,s);
+          };
+         }(function(arr$1,i$1,t$2)
+         {
+          return function(t$3)
+          {
+           var narr;
+           narr=arr$1.slice();
+           Arrays.set(narr,i$1,t$3[1]);
+           return collect(t$2,t$3[0],narr);
+          };
+         }(arr,i,t)))(x);
+        }
+       else
+        {
+         p=fields$1.$0.$0;
+         t$1=fields$1.$1;
+         m$2=path$1.Segments;
+         if(m$2.$==1&&(m$2.$0===p&&($1=[m$2.$0,m$2.$1],true)))
+          {
+           fields$1=t$1;
+           path$1=Route.New($1[1],path$1.QueryArgs,path$1.FormData,path$1.Method,path$1.Body);
+          }
+         else
+          return[];
+        }
+      }
+      else
+       return[[path$1,createObject(arr)]];
+     }
    }
    function m$1(m$2,ps)
    {
@@ -1197,32 +1256,38 @@
     return m$1($1[0],$1[1]);
    },a[1]);
   }
-  parseCases=Seq.collect(function($1)
+  parseCases=Arrays.ofSeq(Seq.collect(function($1)
   {
    return m($1[0],$1[1]);
-  },Seq.indexed(cases));
+  },Seq.indexed(cases)));
   return Router.New$1(function(path)
   {
    function m$1(i,m$2,s,fields)
    {
     var m$3,p,m$4;
-    function collect(fields$1,path$1,acc)
+    function collect(fields$1)
     {
-     var t$1;
-     function m$5(p$1,a)
+     return function(path$1)
      {
-      return collect(t$1,p$1,new List$1.T({
-       $:1,
-       $0:a,
-       $1:acc
-      }));
-     }
-     return fields$1.$==1?(t$1=fields$1.$1,Seq.collect(function($1)
-     {
-      return m$5($1[0],$1[1]);
-     },fields$1.$0.Parse(path$1))):[[path$1,createCase(i,Arrays.ofList(List$1.rev(acc)))]];
+      return function(acc)
+      {
+       var t$1;
+       function m$5(p$1,a)
+       {
+        return((collect(t$1))(p$1))(new List$1.T({
+         $:1,
+         $0:a,
+         $1:acc
+        }));
+       }
+       return fields$1.$==1?(t$1=fields$1.$1,Seq.collect(function($1)
+       {
+        return m$5($1[0],$1[1]);
+       },fields$1.$0.Parse(path$1))):[[path$1,createCase(i,Arrays.ofList(List$1.rev(acc)))]];
+      };
+     };
     }
-    return RouterOperators.isCorrectMethod(m$2,path.Method)?(m$3=List.startsWith(List$1.ofArray(s),path.Segments),m$3==null?[]:(p=m$3.$0,(m$4=List$1.ofArray(fields),m$4.$==0?[[Route.New(p,path.QueryArgs,path.FormData,path.Method,path.Body),createCase(i,[])]]:collect(m$4,Route.New(p,path.QueryArgs,path.FormData,path.Method,path.Body),List$1.T.Empty)))):[];
+    return RouterOperators.isCorrectMethod(m$2,path.Method)?(m$3=List.startsWith(List$1.ofArray(s),path.Segments),m$3==null?[]:(p=m$3.$0,(m$4=List$1.ofArray(fields),m$4.$==0?[[Route.New(p,path.QueryArgs,path.FormData,path.Method,path.Body),createCase(i,[])]]:((collect(m$4))(Route.New(p,path.QueryArgs,path.FormData,path.Method,path.Body)))(List$1.T.Empty)))):[];
    }
    return Seq.collect(function($1)
    {
@@ -1240,7 +1305,7 @@
    fields=p[2];
    p$1=Arrays.get(p[1],0);
    casePath=[Route.Segment(List$1.ofArray(p$1[1]),p$1[0])];
-   return!Unchecked.Equals(fields,null)&&fields.length===0?{
+   return fields.length==0?{
     $:1,
     $0:casePath
    }:(fieldParts=(((Runtime.Curried3(Arrays.map2))(m$1))(readFields(tag,value)))(fields),Arrays.forall(function(o)
@@ -1314,23 +1379,29 @@
   fieldsList=List$1.ofArray(fields$1);
   return Router.New$1(function(path)
   {
-   function collect(fields$2,path$1,acc)
+   function collect(fields$2)
    {
-    var t$1;
-    function m$1(p,a)
+    return function(path$1)
     {
-     return collect(t$1,p,new List$1.T({
-      $:1,
-      $0:a,
-      $1:acc
-     }));
-    }
-    return fields$2.$==1?(t$1=fields$2.$1,Seq.collect(function($1)
-    {
-     return m$1($1[0],$1[1]);
-    },fields$2.$0.Parse(path$1))):[[path$1,createRecord(Arrays.ofList(List$1.rev(acc)))]];
+     return function(acc)
+     {
+      var t$1;
+      function m$1(p,a)
+      {
+       return((collect(t$1))(p))(new List$1.T({
+        $:1,
+        $0:a,
+        $1:acc
+       }));
+      }
+      return fields$2.$==1?(t$1=fields$2.$1,Seq.collect(function($1)
+      {
+       return m$1($1[0],$1[1]);
+      },fields$2.$0.Parse(path$1))):[[path$1,createRecord(Arrays.ofList(List$1.rev(acc)))]];
+     };
+    };
    }
-   return collect(fieldsList,path,List$1.T.Empty);
+   return((collect(fieldsList))(path))(List$1.T.Empty);
   },function(value)
   {
    var parts;
@@ -1365,23 +1436,29 @@
  {
   return Router.New$1(function(path)
   {
-   function collect(elems,path$1,acc)
+   function collect(elems)
    {
-    var t;
-    function m(p,a)
+    return function(path$1)
     {
-     return collect(t,p,new List$1.T({
-      $:1,
-      $0:a,
-      $1:acc
-     }));
-    }
-    return elems.$==1?(t=elems.$1,Seq.collect(function($1)
-    {
-     return m($1[0],$1[1]);
-    },elems.$0.Parse(path$1))):[[path$1,createTuple(Arrays.ofList(List$1.rev(acc)))]];
+     return function(acc)
+     {
+      var t;
+      function m(p,a)
+      {
+       return((collect(t))(p))(new List$1.T({
+        $:1,
+        $0:a,
+        $1:acc
+       }));
+      }
+      return elems.$==1?(t=elems.$1,Seq.collect(function($1)
+      {
+       return m($1[0],$1[1]);
+      },elems.$0.Parse(path$1))):[[path$1,createTuple(Arrays.ofList(List$1.rev(acc)))]];
+     };
+    };
    }
-   return collect(List$1.ofArray(items),path,List$1.T.Empty);
+   return((collect(List$1.ofArray(items)))(path))(List$1.T.Empty);
   },function(value)
   {
    var parts;
@@ -1446,22 +1523,25 @@
  {
   return Router.New$1(function(path)
   {
-   function collect(path$1,acc)
+   function collect(path$1)
    {
-    function m(p,a)
+    return function(acc)
     {
-     return collect(p,new List$1.T({
-      $:1,
-      $0:a,
-      $1:acc
-     }));
-    }
-    return path$1.Segments.$==0?[[path$1,List$1.rev(acc)]]:Seq.collect(function($1)
-    {
-     return m($1[0],$1[1]);
-    },item.Parse(path$1));
+     function m(p,a)
+     {
+      return(collect(p))(new List$1.T({
+       $:1,
+       $0:a,
+       $1:acc
+      }));
+     }
+     return path$1.Segments.$==0?[[path$1,List$1.rev(acc)]]:Seq.collect(function($1)
+     {
+      return m($1[0],$1[1]);
+     },item.Parse(path$1));
+    };
    }
-   return collect(path,List$1.T.Empty);
+   return(collect(path))(List$1.T.Empty);
   },function(value)
   {
    var parts;
@@ -1482,22 +1562,25 @@
  {
   return Router.New$1(function(path)
   {
-   function collect(path$1,acc)
+   function collect(path$1)
    {
-    function m(p,a)
+    return function(acc)
     {
-     return collect(p,new List$1.T({
-      $:1,
-      $0:a,
-      $1:acc
-     }));
-    }
-    return path$1.Segments.$==0?[[path$1,Arrays.ofList(List$1.rev(acc))]]:Seq.collect(function($1)
-    {
-     return m($1[0],$1[1]);
-    },item.Parse(path$1));
+     function m(p,a)
+     {
+      return(collect(p))(new List$1.T({
+       $:1,
+       $0:a,
+       $1:acc
+      }));
+     }
+     return path$1.Segments.$==0?[[path$1,Arrays.ofList(List$1.rev(acc))]]:Seq.collect(function($1)
+     {
+      return m($1[0],$1[1]);
+     },item.Parse(path$1));
+    };
    }
-   return collect(path,List$1.T.Empty);
+   return(collect(path))(List$1.T.Empty);
   },function(value)
   {
    var parts;
@@ -1950,4 +2033,4 @@
    };
   });
  };
-}());
+}(self));
