@@ -18,7 +18,7 @@ module Client =
                 | Some input -> Server.DoSomething input
             )
         div [] [
-            Doc.Input [] rvInput
+            Doc.InputType.Text [] rvInput
             Doc.Button "Send" [] submit.Trigger
             hr [] []
             h4 [attr.``class`` "text-muted"] [text "The server responded:"]
